@@ -1,0 +1,212 @@
+openapi: '3.0.0'
+info:
+  title: 'Zazcar - MaaS API'
+  version: '1'
+  description: |
+    Thanks for your interest in our MaaS api.
+
+    This document a bit long, so you might want to use a visualizer to
+    explore the documentation. Such as https://editor.swagger.io/ or
+    http://petstore.swagger.io/
+
+    This api should enable MaaS apps to list our cars in a map with some details
+    such as:
+      - Location where the cars can be retrieved
+      - Infomation about the available cars
+      - The api also include the packs information for each car, each pack
+      dictates how the customer will be charged in the end of their usage.
+  contact:
+    name: Zazcar
+    url: https://zazcar.com.br
+servers:
+  -
+    url: https://maas.api.zazcar.com.br/v1
+paths:
+  "/pod":
+    get:
+      security:
+        -
+          zazcarKey: []
+      description: >
+        Lists the pods that are availble with the associated cars and packs
+      responses:
+        200:
+          description: The response for the pods
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  pods:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/pod"
+components:
+  schemas:
+    pod:
+      type: object
+      description: >
+        POD stands for Point of Departure or Point of Delivery, Zazcar's model is
+        round trip, which means that the cars are retrieved from certain locations
+        and must be returned to the same location. The PODs usually are parking
+        lots that are open all the time, but a few do have time restrictions.
+      properties:
+        name:
+          type: string
+          description: The name for the Pod, think of it as a short description
+        location:
+          description: Object with the coordinates for the POD
+          type: object
+          properties:
+            lat:
+              type: number
+              format: float
+            lon:
+              type: number
+              format: float
+        carsCount:
+          type: number
+          description: >
+            The total count of cars that can be found in this POD, usually one
+            POD have a few cars that can be used by the customers. A POD without
+            cars should not be expected to be returned by the API, if one is
+            returned, it should be considered a BUG
+        availableCars:
+          type: number
+          description: >
+            A car might not be available for a number of reasons from being used
+            by another customer to maintenance needs, this shows how many cars
+            are available to be used in the POD now
+        openHoursString:
+          type: string
+          description: >
+            A string that informs when the pod is expected to be open, usually
+            it is a variation of "Aberto 24 horas", there is no guarantee for
+            the accuracy of this information, neither for any consistency
+            in how the information is conveyed, natural language is messy...
+        address:
+          type: string
+        cars:
+          type: array
+          items:
+            $ref: "#/components/schemas/car"
+    car:
+      type: object
+      properties:
+        plate:
+          type: string
+          description: >
+            The license plate for the car, it is expected to be in the format:
+            [A-Z]{3}\d{4}
+        transmissionType:
+          type: string
+          enum:
+            - MANUAL
+            - AUTOMATIC
+        available:
+          type: boolean
+          description: >
+            Whether the car is available to use now, if the car is unavailable
+            to use for whatever reason that it might be, the reason is not
+            disclosed
+        color:
+          type: string
+          description: >
+            The color of the car, such as "Prata" or "Branco", not too much
+            variety is expected here
+        engineType:
+          type: string
+          enum:
+            - COMBUSTION
+            - HYBRID
+            - ELETRIC
+        fuelType:
+          type: string
+          enum:
+            - FLEX
+            - GASOLINE
+            - ALCOHOL
+            - DIESEL
+            - ELETRIC
+        estimatedAutonomy:
+          type: number
+          description: >
+            No, we do not have any autonomous car in any level, this is how many
+            kilometers the car is expected to make with the current fuel amount
+            in the tank.
+        fuelLevel:
+          type: number
+          description: >
+            A number from 0 to 100 for the fuel level in the car's tank, for
+            eletric cars that would be the battery level
+        link:
+          type: string
+          format: url
+          description: >
+            A link that should enable the user to go to Zazcar's app and have
+            the app open in a state that should be "just" one touch away from
+            starting using the car
+        packs:
+          type: array
+          description: >
+            A list of the packs that are availble for the car, you must not
+            assume that this list is the same for all the cars. Another think
+            to take in consideration is that this list might change at any time
+          items:
+            $ref: "#/components/schemas/pack"
+    pack:
+      type: object
+      description: >
+        Once a client have decided on the car that they want to use, they also
+        must choose which pack they would like to use, each one of them represent
+        a different level of commitment for using the car. They also dictate
+        on how the client might or might not be charged
+      properties:
+        name:
+          type: string
+          description: The name for the pack
+        value:
+          type: number
+          description: >
+            This one might be 0, if it is not zero it is the BRL cents
+            representation of how much the pack will cost for the client
+        hourlyCost:
+          type: number
+          format: float
+          description: >
+            In a usage where the pack's hour is 0, this represents the cost for
+            each minute of ride's time length. It also represents the cost for
+            each minute of the ride's time that is in excess to the hours value
+            if the ride time length gets to the hours value
+        kmCost:
+          type: number
+          description: >
+            BRL cents representation of how much the client will pay per km used
+            in the ride
+        longKmCost:
+          type: number
+          description: >
+            same as the kmCost, but this value will only be applied if the ride
+            km distance gets to at least the distanceThreshold value
+        minimumValue:
+          type: number
+          nullable: true
+          description: >
+            If set, the ride will cost at least this ammount in BRL cents
+        distanceThreshold:
+          type: number
+          description: >
+            The amount of km that triggers the longKmCost pricing
+        hours:
+          type: number
+          description: >
+            This might be 0, if not it is the hours commitment for the car usage.
+            If the usage goes beyond the hours for the pack, the client will
+            also be charged by the exceeding time
+  securitySchemes:
+    zazcarKey:
+      type: apiKey
+      name: "x-api-key"
+      in: header
+      description: >
+       The api key to allow access for the api endpoints
