@@ -1,4 +1,4 @@
-openapi: '3.0.0'
+openapi: '3.0.1'
 info:
   title: 'Zazcar - MaaS API'
   version: '1'
@@ -13,8 +13,9 @@ info:
     such as:
       - Location where the cars can be retrieved
       - Infomation about the available cars
-      - The api also include the packs information for each car (including a 
-      deeplink), each pack dictates how the customer will be charged in the 
+      - An [universal|app]link for each car
+      - The api also include the packs information for each car,
+      each pack dictates how the customer will be charged in the
       end of their usage.
   contact:
     name: Zazcar
@@ -144,14 +145,16 @@ components:
           type: string
           format: url
           description: >
-            A deeplink of the car that should enable the user to go to Zazcar's app and have
+            An [universal|app]link of the car that should enable the user to go to Zazcar's app and have
             the app open in a state that this car is selected and "just" one click away from
-            starting using the car (if the App is present and after enrollment is concluded) 
+            starting using the car (if the App is present and after enrollment is concluded).
+            If Zazcar's app is not installed the expected behaviour for the mobile OS is to take the user
+            to Zazcar's site.
         packs:
           type: array
           description: >
             A list of the packs that are availble for the car, you must not
-            assume that this list is the same for all the cars. Another think
+            assume that this list is the same for all the cars. Another thing
             to take in consideration is that this list might change at any time
           items:
             $ref: "#/components/schemas/pack"
