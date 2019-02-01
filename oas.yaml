@@ -1,9 +1,9 @@
-openapi: '3.0.0'
+openapi: '3.0.1'
 info:
   title: 'Zazcar - MaaS API'
   version: '1'
   description: |
-    Thanks for your interest in our MaaS api.
+    Thanks for your interest in our MaaS API.
 
     This document a bit long, so you might want to use a visualizer to
     explore the documentation. Such as https://editor.swagger.io/ or
@@ -13,8 +13,10 @@ info:
     such as:
       - Location where the cars can be retrieved
       - Infomation about the available cars
-      - The api also include the packs information for each car, each pack
-      dictates how the customer will be charged in the end of their usage.
+      - An [universal|app]link for each car
+      - The api also include the packs information for each car,
+      each pack dictates how the customer will be charged in the
+      end of their usage.
   contact:
     name: Zazcar
     url: https://zazcar.com.br
@@ -28,7 +30,7 @@ paths:
         -
           zazcarKey: []
       description: >
-        Lists the pods that are availble with the associated cars and packs
+        Lists the PODs that are availble with the associated cars and packs
       responses:
         200:
           description: The response for the pods
@@ -53,7 +55,7 @@ components:
       properties:
         name:
           type: string
-          description: The name for the Pod, think of it as a short description
+          description: The name for the POD, think of it as a short description
         location:
           description: Object with the coordinates for the POD
           type: object
@@ -133,7 +135,7 @@ components:
           description: >
             No, we do not have any autonomous car in any level, this is how many
             kilometers the car is expected to make with the current fuel amount
-            in the tank.
+            in the tank or battery level
         fuelLevel:
           type: number
           description: >
@@ -143,14 +145,16 @@ components:
           type: string
           format: url
           description: >
-            A link that should enable the user to go to Zazcar's app and have
-            the app open in a state that should be "just" one touch away from
-            starting using the car
+            An [universal|app]link of the car that should enable the user to go to Zazcar's app and have
+            the app open in a state that this car is selected and "just" one click away from
+            starting using the car (if the App is present and after enrollment is concluded).
+            If Zazcar's app is not installed the expected behaviour for the mobile OS is to take the user
+            to Zazcar's site.
         packs:
           type: array
           description: >
             A list of the packs that are availble for the car, you must not
-            assume that this list is the same for all the cars. Another think
+            assume that this list is the same for all the cars. Another thing
             to take in consideration is that this list might change at any time
           items:
             $ref: "#/components/schemas/pack"
