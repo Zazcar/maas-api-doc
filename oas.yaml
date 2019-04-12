@@ -1,7 +1,7 @@
 openapi: '3.0.1'
 info:
   title: 'Zazcar - MaaS API'
-  version: '1.1.0'
+  version: '1.2.0'
   description: |
     Thanks for your interest in our MaaS API.
 
