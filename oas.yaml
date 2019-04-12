@@ -165,9 +165,11 @@ components:
         packs:
           type: array
           description: >
-            A list of the packs that are availble for the car, you must not
+            A list of the packs that are available for the car, you must not
             assume that this list is the same for all the cars. Another thing
-            to take in consideration is that this list might change at any time
+            to take in consideration is that this list might change at any time. In general, cars of
+            the same category have the same packs associated with them, but this not somerthing that
+            should be relied upon.
           items:
             $ref: "#/components/schemas/pack"
     pack:
