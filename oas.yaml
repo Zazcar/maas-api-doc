@@ -141,6 +141,18 @@ components:
           description: >
             A number from 0 to 100 for the fuel level in the car's tank, for
             eletric cars that would be the battery level
+        model:
+          type: string
+          description: The car model's name such as "HB20", "HB20S" or "Ford Ka"
+        category:
+          type: string
+          description: The category name for the car, such as "Compacto" and "Sedan"
+        thumbnail:
+          type: string
+          format: url
+          description: >
+            An URL for a thumbnail image for the car, it is the same one that is used by Zazcar's
+            app.
         link:
           type: string
           format: url
