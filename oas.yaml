@@ -1,7 +1,7 @@
 openapi: '3.0.1'
 info:
   title: 'Zazcar - MaaS API'
-  version: '1.1.0'
+  version: '1.2.0'
   description: |
     Thanks for your interest in our MaaS API.
 
@@ -141,6 +141,18 @@ components:
           description: >
             A number from 0 to 100 for the fuel level in the car's tank, for
             eletric cars that would be the battery level
+        model:
+          type: string
+          description: The car model's name such as "HB20", "HB20S" or "Ford Ka"
+        category:
+          type: string
+          description: The category name for the car, such as "Compacto" and "Sedan"
+        thumbnail:
+          type: string
+          format: url
+          description: >
+            An URL for a thumbnail image for the car, it is the same one that is used by Zazcar's
+            app.
         link:
           type: string
           format: url
@@ -153,9 +165,11 @@ components:
         packs:
           type: array
           description: >
-            A list of the packs that are availble for the car, you must not
+            A list of the packs that are available for the car, you must not
             assume that this list is the same for all the cars. Another thing
-            to take in consideration is that this list might change at any time
+            to take in consideration is that this list might change at any time. In general, cars of
+            the same category have the same packs associated with them, but this not somerthing that
+            should be relied upon.
           items:
             $ref: "#/components/schemas/pack"
     pack:
