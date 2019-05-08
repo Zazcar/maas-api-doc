@@ -1,7 +1,7 @@
 openapi: '3.0.1'
 info:
   title: 'Zazcar - MaaS API'
-  version: '1.2.0'
+  version: '1.2.1'
   description: |
     Thanks for your interest in our MaaS API.
 
@@ -231,6 +231,11 @@ components:
             This might be 0, if not it is the hours commitment for the car usage.
             If the usage goes beyond the hours for the pack, the client will
             also be charged by the exceeding time
+        icon:
+          type: string
+          format: url
+          description: >
+            An URL for the icon used by Zazcar's app for the pack
   securitySchemes:
     zazcarKey:
       type: apiKey
